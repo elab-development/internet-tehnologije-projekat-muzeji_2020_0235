@@ -33,7 +33,7 @@ class MuseumController extends Controller
             'type' => 'required|string|in:umetnost,istorijski,naučni,savremeni,vojni',
             'location' => 'required|string|max:255',
             'image_url' => 'nullable|url',
-            'three_d_view_url' => 'nullable|url',
+         
             'ticket_price' => 'required|numeric|min:0',
         ]);
 
@@ -48,7 +48,7 @@ class MuseumController extends Controller
             'type' => $request->input('type'),
             'location' => $request->input('location'),
             'image_url' => $request->input('image_url'),
-            'three_d_view_url' => $request->input('three_d_view_url'),
+       
             'ticket_price' => $request->input('ticket_price'),
             'user_id' => Auth::id(),  // Koristi ID ulogovanog korisnika
         ]);
