@@ -1,0 +1,134 @@
+/* Colors */
+:root {
+    --light-green: #ddf8e8;
+    --grey: #cdd5d1;
+    --soft-brown: #b4a6ab;
+    --purple: #946e83;
+    --dark-brown: #615055;
+  }
+  
+  /* General Styles */
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--light-green);
+    color: var(--dark-brown);
+  }
+  
+  h1, h2, h3 {
+    color: var(--purple);
+  }
+  
+  p {
+    color: var(--dark-brown);
+  }
+  
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    background-color: var(--soft-brown);
+    width: 100%;
+    padding: 50px;
+    text-align: center;
+  }
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .explore-button {
+    background-color: var(--purple);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .explore-button:hover {
+    background-color: var(--dark-brown);
+  }
+  
+  /* Features Section */
+  .features-section {
+    background-color: var(--light-green);
+    padding: 50px;
+    text-align: center;
+  }
+  
+  .features-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .feature-box {
+    background-color: var(--grey);
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+  }
+  
+  .feature-box h3 {
+    margin-bottom: 15px;
+  }
+  
+  .feature-box p {
+    font-size: 1rem;
+  }
+  
+  /* Museum Highlights Section */
+  .museum-highlights-section {
+    background-color: var(--light-green);
+    padding: 50px;
+    text-align: center;
+  }
+  
+  .museum-gallery {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .museum-card {
+    background-color: var(--grey);
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+  }
+  
+  .museum-card img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .museum-card h3 {
+    margin: 15px 0;
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: var(--dark-brown);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+  }
+  
