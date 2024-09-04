@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MuseumController;
+use App\Http\Controllers\ReservationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,3 +30,12 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/reservations', [ReservationController::class, 'index']);       // Prikaz svih rezervacija za korisnika
+    Route::get('/reservations/{id}', [ReservationController::class, 'show']);   // Prikaz jedne rezervacije
+    Route::post('/reservations', [ReservationController::class, 'store']);      // Kreiranje nove rezervacije
+    Route::put('/reservations/{id}', [ReservationController::class, 'update']); // Ažuriranje rezervacije
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']); // Brisanje rezervacije
+});
