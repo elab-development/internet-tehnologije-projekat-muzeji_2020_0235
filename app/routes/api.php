@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MuseumController;
 use App\Http\Controllers\ReservationController;
 /*
@@ -16,7 +17,7 @@ use App\Http\Controllers\ReservationController;
 |
 */
 
-
+Route::resource('messages', MessageController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/museums', [MuseumController::class, 'index']);       // Prikaz svih muzeja
