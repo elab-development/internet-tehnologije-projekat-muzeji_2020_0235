@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
- 
+import InputField from './InputField';  
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -44,30 +44,22 @@ const LoginForm = () => {
           {error && <p className="error-message">{error}</p>}
           {success && <p className="success-message">{success}</p>}
           <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Password:</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
+            <InputField
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
             <button type="submit" className="explore-button">Login</button>
           </form>
         </div>

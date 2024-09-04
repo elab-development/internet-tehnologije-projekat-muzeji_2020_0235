@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
- 
+import InputField from './InputField';  
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -50,54 +50,38 @@ const RegisterForm = () => {
           {error && <p className="error-message">{error.email || error.password || 'An error occurred during registration.'}</p>}
           {success && <p className="success-message">{success}</p>}
           <form onSubmit={handleSubmit} className="register-form">
-            <div className="form-group">
-              <label htmlFor="name">Name:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Password:</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password_confirmation">Confirm Password:</label>
-              <input
-                type="password"
-                id="password_confirmation"
-                name="password_confirmation"
-                value={formData.password_confirmation}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
+            <InputField
+              label="Name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Confirm Password"
+              type="password"
+              name="password_confirmation"
+              value={formData.password_confirmation}
+              onChange={handleChange}
+              required
+            />
             <button type="submit" className="explore-button">Register</button>
           </form>
         </div>
