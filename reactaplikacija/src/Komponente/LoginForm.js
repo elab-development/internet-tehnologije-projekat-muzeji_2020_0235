@@ -4,8 +4,8 @@ import InputField from './InputField';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'anadrobnjak@gmail.com',
+    password: 'password',
   });
   
   const [error, setError] = useState(null);
