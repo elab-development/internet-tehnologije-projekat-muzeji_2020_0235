@@ -201,3 +201,51 @@ button:hover {
 
 
 
+/* Navbar Styles */
+.navbar {
+  background-color: var(--soft-brown);
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links a {
+  margin-right: 20px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: var(--dark-brown);
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: var(--purple);
+}
+
+.navbar-links span {
+  font-size: 1.1rem;
+  margin-right: 20px;
+  color: var(--dark-brown);
+  font-weight: bold;
+}
+
+.navbar-links button {
+  background-color: var(--purple);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-links button:hover {
+  background-color: var(--dark-brown);
+}

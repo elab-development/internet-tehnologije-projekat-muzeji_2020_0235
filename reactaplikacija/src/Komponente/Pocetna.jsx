@@ -3,15 +3,7 @@ import './Pocetna.css';
 
 const Pocetna = () => {
   return (
-    <div className="app-container">
-      <header className="hero-section">
-        <div className="hero-content">
-          <h1>Welcome to the World of Museums</h1>
-          <p>Discover the beauty of history, art, and culture through the vast collection of museums worldwide. Whether you're an art lover, history buff, or science enthusiast, we have a museum for you. Start your journey today and explore the finest museums near and far.</p>
-          <button className="explore-button">Explore Museums</button>
-        </div>
-      </header>
-
+    <div className="app-container"> 
       <section className="features-section">
         <h2>Why Visit a Museum?</h2>
         <div className="features-container">

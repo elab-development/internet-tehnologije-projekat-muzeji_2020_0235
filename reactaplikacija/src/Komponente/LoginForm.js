@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import InputField from './InputField';  
 
-const LoginForm = () => {
+const LoginForm = ({ setUser, setToken }) => {
   const [formData, setFormData] = useState({
     email: 'anadrobnjak@gmail.com',
     password: 'password',
@@ -28,6 +28,10 @@ const LoginForm = () => {
       sessionStorage.setItem('auth_token', response.data.token);
       sessionStorage.setItem('user', JSON.stringify(response.data.user));
 
+      // Postavljanje tokena i korisnika u state
+      setToken(response.data.token);
+      setUser(response.data.user);
+
       setSuccess('Login successful!');
       setError(null);
     } catch (err) {
@@ -35,7 +39,6 @@ const LoginForm = () => {
       setSuccess(null);
     }
   };
-
   return (
     <div className="app-container">
       <div className="hero-section">
