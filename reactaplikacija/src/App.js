@@ -8,6 +8,7 @@ import MessageForm from './Komponente/MessageForm';
 import MuseumList from './Komponente/MuseumList';
 import Navbar from './Komponente/Navbar';
 import MuzejiAdmin from './Komponente/MuzejiAdmin';
+import PorukeAdmin from './Komponente/PorukeAdmin';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,6 +38,8 @@ function App() {
             </>
           ) : (
             <>
+              <Route path="/admin/message" element={<PorukeAdmin />} />
+
               <Route path="/admin/museums" element={<MuzejiAdmin />} />
 
               <Route path="/message" element={<MessageForm />} />
