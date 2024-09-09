@@ -24,6 +24,23 @@ const MuzejiAdmin = () => {
     fetchMuseums();
   }, []);
 
+  const deleteMuseum = async (id) => {
+    const confirmDelete = window.confirm('Da li ste sigurni da želite da obrišete ovaj muzej?');
+    if (!confirmDelete) return;
+
+    try {
+      const token = sessionStorage.getItem('auth_token');
+      await axios.delete(`http://127.0.0.1:8000/api/museums/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Nakon uspešnog brisanja, ažuriramo listu muzeja
+      setMuseums(museums.filter((museum) => museum.id !== id));
+    } catch (error) {
+      setError('Greška prilikom brisanja muzeja.');
+    }
+  };
+
   if (loading) {
     return <p>Učitavanje muzeja...</p>;
   }
@@ -58,7 +75,7 @@ const MuzejiAdmin = () => {
               <td>{museum.ticket_price}</td>
               <td>
                 <button>Izmeni</button>
-                <button>Obriši</button>
+                <button onClick={() => deleteMuseum(museum.id)}>Obriši</button>
               </td>
             </tr>
           ))}
