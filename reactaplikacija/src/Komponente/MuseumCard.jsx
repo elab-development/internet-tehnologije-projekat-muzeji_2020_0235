@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './MuseumCard.css';
 
-const MuseumCard = ({ museum, onReserve }) => {
+const MuseumCard = ({ museum, onReserve, selectedCurrency }) => {  // Dodato selectedCurrency kao prop
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [numTickets, setNumTickets] = useState(1);
   const [reservationDate, setReservationDate] = useState('');
@@ -39,7 +39,9 @@ const MuseumCard = ({ museum, onReserve }) => {
       <p>{museum.description}</p>
       <p>Lokacija: {museum.location}</p>
       <p>Tip: {museum.type}</p>
-      <p>Cena ulaznice: {museum.ticket_price} din</p>
+      <p>
+        Cena ulaznice: {museum.ticket_price.toFixed(2)} {selectedCurrency} {/* Zaokruženo na 2 decimale i dodata oznaka valute */}
+      </p>
       <button onClick={openModal} className="reserve-button">
         Rezerviši
       </button>
