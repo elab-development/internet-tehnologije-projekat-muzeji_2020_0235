@@ -4,8 +4,12 @@ import './PorukeAdmin.css';
 
 const PorukeAdmin = () => {
   const [messages, setMessages] = useState([]);
+  const [filteredMessages, setFilteredMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [messagesPerPage] = useState(2); // Broj poruka po stranici
+  const [filter, setFilter] = useState(''); // Polje za filtriranje
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -15,6 +19,7 @@ const PorukeAdmin = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMessages(response.data);
+        setFilteredMessages(response.data); // Inicijalno prikazivanje svih poruka
         setLoading(false);
       } catch (error) {
         setError('Greška prilikom učitavanja poruka.');
@@ -36,9 +41,32 @@ const PorukeAdmin = () => {
       });
 
       setMessages(messages.filter((message) => message.id !== id));
+      setFilteredMessages(filteredMessages.filter((message) => message.id !== id));
     } catch (error) {
       setError('Greška prilikom brisanja poruke.');
     }
+  };
+
+  // Funkcija za promenu stranice
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Logika za određivanje trenutne stranice
+  const indexOfLastMessage = currentPage * messagesPerPage;
+  const indexOfFirstMessage = indexOfLastMessage - messagesPerPage;
+  const currentMessages = filteredMessages.slice(indexOfFirstMessage, indexOfLastMessage);
+
+  // Funkcija za filtriranje poruka
+  const handleFilterChange = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setFilter(searchValue);
+    setFilteredMessages(
+      messages.filter(
+        (message) =>
+          message.content.toLowerCase().includes(searchValue) ||
+          message.user.name.toLowerCase().includes(searchValue)
+      )
+    );
+    setCurrentPage(1); // Vraćamo paginaciju na prvu stranicu nakon filtriranja
   };
 
   if (loading) {
@@ -49,9 +77,21 @@ const PorukeAdmin = () => {
     return <p>{error}</p>;
   }
 
+  // Broj stranica
+  const totalPages = Math.ceil(filteredMessages.length / messagesPerPage);
+
   return (
     <div className="poruke-admin">
       <h1>Spisak korisničkih poruka</h1>
+
+      {/* Filter za pretragu */}
+      <input
+        type="text"
+        placeholder="Pretraži po sadržaju ili korisniku"
+        value={filter}
+        onChange={handleFilterChange}
+        className="filter-input"
+      />
 
       {/* Tabela sa spiskom poruka */}
       <table>
@@ -65,7 +105,7 @@ const PorukeAdmin = () => {
           </tr>
         </thead>
         <tbody>
-          {messages.map((message) => (
+          {currentMessages.map((message) => (
             <tr key={message.id}>
               <td>{message.id}</td>
               <td>{message.user.name}</td>
@@ -78,6 +118,19 @@ const PorukeAdmin = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Paginacija */}
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => paginate(index + 1)}
+            className={index + 1 === currentPage ? 'active' : ''}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
