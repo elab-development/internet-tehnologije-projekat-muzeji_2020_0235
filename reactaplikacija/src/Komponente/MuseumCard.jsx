@@ -32,6 +32,9 @@ const MuseumCard = ({ museum, onReserve, selectedCurrency }) => {  // Dodato sel
     closeModal();
   };
 
+  // Proveravamo da li je `ticket_price` validan broj pre nego što primenimo toFixed
+  const ticketPrice = isNaN(museum.ticket_price) ? 0 : Number(museum.ticket_price);
+
   return (
     <div className="museum-card">
       <img src={museum.image_url} alt={museum.name} className="museum-image" />
@@ -40,7 +43,7 @@ const MuseumCard = ({ museum, onReserve, selectedCurrency }) => {  // Dodato sel
       <p>Lokacija: {museum.location}</p>
       <p>Tip: {museum.type}</p>
       <p>
-        Cena ulaznice: {museum.ticket_price.toFixed(2)} {selectedCurrency} {/* Zaokruženo na 2 decimale i dodata oznaka valute */}
+        Cena ulaznice: {ticketPrice.toFixed(2)} {selectedCurrency} {/* Zaokruženo na 2 decimale i dodata oznaka valute */}
       </p>
       <button onClick={openModal} className="reserve-button">
         Rezerviši

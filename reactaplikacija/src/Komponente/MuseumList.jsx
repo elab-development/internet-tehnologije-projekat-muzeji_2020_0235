@@ -98,15 +98,18 @@ const MuseumList = () => {
     museum.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sortiranje muzeja
-  const sortedMuseums = filteredMuseums.sort((a, b) => {
-    if (sortOption === 'name') {
-      return a.name.localeCompare(b.name);
-    } else if (sortOption === 'price') {
-      return a.ticket_price - b.ticket_price;
-    }
-    return 0;
-  });
+// Sortiranje muzeja
+const sortedMuseums = filteredMuseums.sort((a, b) => {
+  if (sortOption === 'name') {
+    return a.name.localeCompare(b.name);
+  } else if (sortOption === 'price') {
+    const priceA = convertedPrices[a.id] || a.ticket_price; // Koristi konvertovanu cenu ako je dostupna
+    const priceB = convertedPrices[b.id] || b.ticket_price;
+    return priceA - priceB;
+  }
+  return 0;
+});
+
 
   // Prikazivanje muzeja
   if (loading) return <p>Učitavanje muzeja...</p>;

@@ -37,9 +37,19 @@ const Navbar = ({ user, token, setUser, setToken }) => {
           </>
         ) : (
           <>
-            <Link to="/message">Poruka</Link>
-            <Link to="/museums">Muzeji</Link>
-             
+            {user && user.role === 'user' ? (
+              <>
+                <Link to="/message">Poruka</Link>
+                <Link to="/museums">Muzeji</Link>
+                <Link to="/mojeRezervacije">Moje rezervacije</Link>
+              </>
+            ) : user && user.role == 'worker' ? (
+              <>
+                <Link to="/admin/message">Admin Poruke</Link>
+                <Link to="/admin/museums">Admin Muzeji</Link>
+              </>
+            ) : null}
+
             <button onClick={handleLogout}>Odjava</button>
           </>
         )}

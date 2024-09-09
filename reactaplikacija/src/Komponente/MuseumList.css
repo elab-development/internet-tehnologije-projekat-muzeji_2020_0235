@@ -126,3 +126,58 @@
     transform: scale(1);
   }
 }
+/* Stilovi za input polja i combobox (select) */
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--grey);
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: white;
+  color: var(--dark-brown);
+}
+
+input:focus, select:focus {
+  border-color: var(--purple); /* Promena boje granice pri fokusu */
+  outline: none;
+  box-shadow: 0 0 5px var(--purple); /* Blaga senka pri fokusu */
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none; /* Za Safari i Chrome */
+  -moz-appearance: none;    /* Za Firefox */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 15px;
+  padding-right: 35px; /* Dodatni prostor za strelicu */
+}
+
+input::placeholder, select::placeholder {
+  color: var(--grey); /* Boja placeholder teksta */
+}
+
+/* Hover efekat za input i select polja */
+input:hover, select:hover {
+  border-color: var(--dark-purple); /* Promena boje granice pri hoveru */
+}
+
+/* Stil dugmeta unutar forme */
+.submit-button {
+  padding: 12px 20px;
+  background-color: var(--purple);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: var(--dark-purple); /* Promena boje na hover */
+}
