@@ -9,6 +9,7 @@ import MuseumList from './Komponente/MuseumList';
 import Navbar from './Komponente/Navbar';
 import MuzejiAdmin from './Komponente/MuzejiAdmin';
 import PorukeAdmin from './Komponente/PorukeAdmin';
+import MojeRezervacije from './Komponente/MojeRezervacije';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,8 +40,9 @@ function App() {
           ) : (
             <>
               <Route path="/admin/message" element={<PorukeAdmin />} />
-
               <Route path="/admin/museums" element={<MuzejiAdmin />} />
+              <Route path="/mojeRezervacije" element={<MojeRezervacije />} />
+
 
               <Route path="/message" element={<MessageForm />} />
               <Route path="/museums" element={<MuseumList />} />

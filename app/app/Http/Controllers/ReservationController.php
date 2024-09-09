@@ -9,12 +9,29 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
-    // Prikaz svih rezervacija za ulogovanog korisnika
     public function index()
     {
-        $reservations = Reservation::where('user_id', Auth::id())->get();
-        return response()->json($reservations, 200);
+        // Dohvatanje svih rezervacija za ulogovanog korisnika, zajedno sa podacima o muzeju
+        $reservations = Reservation::where('user_id', Auth::id())
+                        ->with('museum') // Učitaj sve podatke o muzeju
+                        ->get();
+    
+        // Prolazimo kroz sve rezervacije i dodajemo ukupan iznos u odgovor
+        $reservationsWithTotalPrice = $reservations->map(function ($reservation) {
+            $totalPrice = $reservation->num_tickets * $reservation->museum->ticket_price;
+    
+            return [
+                'id' => $reservation->id,
+                'museum' => $reservation->museum,
+                'reservation_date' => $reservation->reservation_date,
+                'num_tickets' => $reservation->num_tickets,
+                'total_price' => $totalPrice,  // Dodajemo ukupnu cenu
+            ];
+        });
+    
+        return response()->json($reservationsWithTotalPrice, 200);
     }
+    
 
     // Prikaz jedne rezervacije
     public function show($id)

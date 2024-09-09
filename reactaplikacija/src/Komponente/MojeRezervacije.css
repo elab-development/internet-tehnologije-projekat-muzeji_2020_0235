@@ -1,0 +1,57 @@
+.moje-rezervacije {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .moje-rezervacije h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .moje-rezervacije table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .moje-rezervacije table th,
+  .moje-rezervacije table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .moje-rezervacije table th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  .moje-rezervacije table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .moje-rezervacije table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .delete-button {
+    padding: 8px 12px;
+    color: white;
+    background-color: #d9534f;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #c9302c;
+  }
+  
+  .moje-rezervacije p {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+  }
+  
