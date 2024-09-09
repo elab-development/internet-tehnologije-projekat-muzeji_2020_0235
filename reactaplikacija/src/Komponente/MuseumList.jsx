@@ -36,6 +36,28 @@ const MuseumList = () => {
     setSortOption(e.target.value);
   };
 
+  // Kreiranje rezervacije
+  const handleReserve = async (museumId, reservationDate, numTickets) => {
+    try {
+      const token = sessionStorage.getItem('auth_token');
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/reservations',
+        {
+          museum_id: museumId,
+          reservation_date: reservationDate,
+          num_tickets: numTickets,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert('Rezervacija je uspešno kreirana!');
+    } catch (error) {
+      console.error('Greška prilikom kreiranja rezervacije:', error);
+      alert('Došlo je do greške prilikom kreiranja rezervacije.');
+    }
+  };
+
   // Filtriranje muzeja na osnovu pojma za pretragu
   const filteredMuseums = museums.filter((museum) =>
     museum.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,32 +78,33 @@ const MuseumList = () => {
 
   return (
     <>
-          {/* Pretraga */}
-          <div className="search-sort-container">
-          <input
-            type="text"
-            placeholder="Pretraži muzeje..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-input"
-          />
-  
-          {/* Sortiranje */}
-          <select value={sortOption} onChange={handleSort} className="sort-select">
-            <option value="">Sortiraj po</option>
-            <option value="name">Nazivu</option>
-            <option value="price">Ceni ulaznice</option>
-          </select>
-        </div>
-    <div className="museum-list-container">
+      {/* Pretraga */}
+      <div className="search-sort-container">
+        <input
+          type="text"
+          placeholder="Pretraži muzeje..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="search-input"
+        />
 
-
-      {sortedMuseums.length > 0 ? (
-        sortedMuseums.map((museum) => <MuseumCard key={museum.id} museum={museum} />)
-      ) : (
-        <p>Nema dostupnih muzeja.</p>
-      )}
-    </div></>
+        {/* Sortiranje */}
+        <select value={sortOption} onChange={handleSort} className="sort-select">
+          <option value="">Sortiraj po</option>
+          <option value="name">Nazivu</option>
+          <option value="price">Ceni ulaznice</option>
+        </select>
+      </div>
+      <div className="museum-list-container">
+        {sortedMuseums.length > 0 ? (
+          sortedMuseums.map((museum) => (
+            <MuseumCard key={museum.id} museum={museum} onReserve={handleReserve} />
+          ))
+        ) : (
+          <p>Nema dostupnih muzeja.</p>
+        )}
+      </div>
+    </>
   );
 };
 
