@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './MojeRezervacije.css';  
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import './MojeRezervacije.css';
+import JsBarcode from 'jsbarcode';
 
 const MojeRezervacije = () => {
   const [reservations, setReservations] = useState([]);
@@ -15,7 +18,6 @@ const MojeRezervacije = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Sortiramo rezervacije hronološki unazad (najnovije prvo)
         const sortedReservations = response.data.sort(
           (a, b) => new Date(b.reservation_date) - new Date(a.reservation_date)
         );
@@ -47,6 +49,44 @@ const MojeRezervacije = () => {
     }
   };
 
+  const generatePDF = (reservation) => {
+    const doc = new jsPDF();
+
+    // Naslov karte
+    doc.setFontSize(20);
+    doc.text(`Ulaznica za ${reservation.museum.name}`, 20, 20);
+
+    // Detalji muzeja
+    doc.setFontSize(12);
+    doc.text(`Muzej: ${reservation.museum.name}`, 20, 40);
+    doc.text(`Lokacija: ${reservation.museum.location}`, 20, 50);
+    doc.text(`Tip: ${reservation.museum.type}`, 20, 60);
+    doc.text(`Cena ulaznice: ${reservation.museum.ticket_price} din`, 20, 70);
+
+    // Detalji o rezervaciji
+    doc.text(`Datum rezervacije: ${new Date(reservation.reservation_date).toLocaleDateString()}`, 20, 90);
+    doc.text(`Broj karata: ${reservation.num_tickets}`, 20, 100);
+    doc.text(`Ukupna cena: ${reservation.total_price} din`, 20, 110);
+
+    // Prikaz slike muzeja
+    if (reservation.museum.image_url) {
+      const img = new Image();
+      img.src = reservation.museum.image_url;
+      doc.addImage(img, 'JPEG', 150, 40, 40, 40);  // Pozicioniranje i veličina slike
+    }
+
+    // Bar kod
+    const canvas = document.createElement('canvas');
+    JsBarcode(canvas, reservation.id.toString(), {
+      format: 'CODE128',
+    });
+    const barcodeImage = canvas.toDataURL('image/png');
+    doc.addImage(barcodeImage, 'PNG', 20, 130, 120, 40);
+
+    // Generišemo PDF
+    doc.save(`ulaznica_${reservation.museum.name}.pdf`);
+  };
+
   const isCancelable = (reservationDate) => {
     const today = new Date().setHours(0, 0, 0, 0); // Danasnji datum
     const resDate = new Date(reservationDate).setHours(0, 0, 0, 0); // Datum rezervacije
@@ -75,6 +115,7 @@ const MojeRezervacije = () => {
               <th>Muzej</th>
               <th>Datum rezervacije</th>
               <th>Broj karata</th>
+              <th>Ukupna cena</th>
               <th>Akcije</th>
             </tr>
           </thead>
@@ -88,6 +129,7 @@ const MojeRezervacije = () => {
                   <td>{reservation.museum.name}</td>
                   <td>{new Date(reservation.reservation_date).toLocaleDateString()}</td>
                   <td>{reservation.num_tickets}</td>
+                  <td>{reservation.total_price} din</td>
                   <td>
                     {cancelable ? (
                       <button
@@ -101,6 +143,12 @@ const MojeRezervacije = () => {
                         Nije moguće otkazati
                       </button>
                     )}
+                    <button
+                      onClick={() => generatePDF(reservation)}
+                      className="pdf-button"
+                    >
+                      Generiši ulaznicu (PDF)
+                    </button>
                   </td>
                 </tr>
               );

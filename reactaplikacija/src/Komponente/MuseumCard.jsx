@@ -5,6 +5,7 @@ const MuseumCard = ({ museum, onReserve }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [numTickets, setNumTickets] = useState(1);
   const [reservationDate, setReservationDate] = useState('');
+  const [error, setError] = useState('');  // Stanje za prikazivanje grešaka
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -14,9 +15,18 @@ const MuseumCard = ({ museum, onReserve }) => {
     setIsModalOpen(false);
     setNumTickets(1);
     setReservationDate('');
+    setError('');  // Resetujemo grešku
   };
 
   const handleReserve = () => {
+    const today = new Date().setHours(0, 0, 0, 0); // Danasnji datum bez vremena
+    const selectedDate = new Date(reservationDate).setHours(0, 0, 0, 0); // Izabrani datum bez vremena
+
+    if (selectedDate < today) {
+      setError('Ne možete rezervisati datum iz prošlosti.');
+      return;
+    }
+
     // Kreiraj rezervaciju
     onReserve(museum.id, reservationDate, numTickets);
     closeModal();
@@ -39,6 +49,7 @@ const MuseumCard = ({ museum, onReserve }) => {
           <div className="modal-content">
             <span className="close-button" onClick={closeModal}>&times;</span>
             <h2>Rezervacija za {museum.name}</h2>
+            {error && <p className="error-message">{error}</p>}  {/* Prikaz greške */}
             <div>
               <label>Datum rezervacije:</label>
               <input
