@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import InputField from './InputField';  
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const RegisterForm = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  let navigate= useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,9 +28,8 @@ const RegisterForm = () => {
       const response = await axios.post('http://127.0.0.1:8000/api/register', formData);
       
       // Čuvanje tokena i korisničkih podataka u sessionStorage
-      sessionStorage.setItem('auth_token', response.data.token);
-      sessionStorage.setItem('user', JSON.stringify(response.data.user));
-
+    
+      navigate('/login')
       setSuccess('Registration successful!');
       setError(null);
     } catch (err) {

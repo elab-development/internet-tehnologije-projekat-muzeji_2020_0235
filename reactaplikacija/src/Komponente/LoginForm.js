@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import InputField from './InputField';  
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({ setUser, setToken }) => {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ const LoginForm = ({ setUser, setToken }) => {
       [e.target.name]: e.target.value,
     });
   };
-
+  let navigate= useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -34,6 +35,7 @@ const LoginForm = ({ setUser, setToken }) => {
 
       setSuccess('Login successful!');
       setError(null);
+      navigate("/museums")
     } catch (err) {
       setError('Login failed. Please check your credentials.');
       setSuccess(null);
