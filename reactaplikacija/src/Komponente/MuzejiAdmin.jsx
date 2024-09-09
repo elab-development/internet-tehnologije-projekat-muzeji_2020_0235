@@ -11,8 +11,9 @@ const MuzejiAdmin = () => {
     type: '',
     location: '',
     ticket_price: '',
-    image_url: '', // Dodali smo image_url u početno stanje
+    image_url: '',
   });
+  const [editingMuseumId, setEditingMuseumId] = useState(null); // Dodajemo stanje za ID muzeja koji se uređuje
 
   useEffect(() => {
     const fetchMuseums = async () => {
@@ -48,41 +49,80 @@ const MuzejiAdmin = () => {
     }
   };
 
-  const createMuseum = async (e) => {
+  const createOrUpdateMuseum = async (e) => {
     e.preventDefault();
-    try {
-      const token = sessionStorage.getItem('auth_token');
-      const response = await axios.post(
-        'http://127.0.0.1:8000/api/museums',
-        {
-          name: newMuseum.name,
-          description: newMuseum.description,
-          type: newMuseum.type,
-          location: newMuseum.location,
-          ticket_price: newMuseum.ticket_price,
-          image_url: newMuseum.image_url, // Prosleđujemo image_url
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    const token = sessionStorage.getItem('auth_token');
 
-      setMuseums([...museums, response.data]);
+    try {
+      if (editingMuseumId) {
+        // Ažuriramo postojeći muzej
+        await axios.put(
+          `http://127.0.0.1:8000/api/museums/${editingMuseumId}`,
+          {
+            name: newMuseum.name,
+            description: newMuseum.description,
+            type: newMuseum.type,
+            location: newMuseum.location,
+            ticket_price: newMuseum.ticket_price,
+            image_url: newMuseum.image_url,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        // Ažuriramo listu muzeja nakon izmena
+        setMuseums(museums.map((museum) => (museum.id === editingMuseumId ? { ...museum, ...newMuseum } : museum)));
+      } else {
+        // Kreiramo novi muzej
+        const response = await axios.post(
+          'http://127.0.0.1:8000/api/museums',
+          {
+            name: newMuseum.name,
+            description: newMuseum.description,
+            type: newMuseum.type,
+            location: newMuseum.location,
+            ticket_price: newMuseum.ticket_price,
+            image_url: newMuseum.image_url,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        // Dodajemo novi muzej u listu
+        setMuseums([...museums, response.data]);
+      }
+
+      // Resetujemo formu i editovanje
       setNewMuseum({
         name: '',
         description: '',
         type: '',
         location: '',
         ticket_price: '',
-        image_url: '', // Resetovanje image_url polja
+        image_url: '',
       });
+      setEditingMuseumId(null);
     } catch (error) {
-      setError('Greška prilikom kreiranja muzeja.');
+      setError('Greška prilikom kreiranja ili ažuriranja muzeja.');
     }
   };
 
   const handleInputChange = (e) => {
     setNewMuseum({ ...newMuseum, [e.target.name]: e.target.value });
+  };
+
+  const handleEdit = (museum) => {
+    setNewMuseum({
+      name: museum.name,
+      description: museum.description,
+      type: museum.type,
+      location: museum.location,
+      ticket_price: museum.ticket_price,
+      image_url: museum.image_url,
+    });
+    setEditingMuseumId(museum.id);
   };
 
   if (loading) {
@@ -97,9 +137,9 @@ const MuzejiAdmin = () => {
     <div>
       <h1>Spisak muzeja</h1>
 
-      {/* Forma za kreiranje novog muzeja */}
-      <form onSubmit={createMuseum}>
-        <h2>Kreiraj novi muzej</h2>
+      {/* Forma za kreiranje ili ažuriranje muzeja */}
+      <form onSubmit={createOrUpdateMuseum}>
+        <h2>{editingMuseumId ? 'Izmeni muzej' : 'Kreiraj novi muzej'}</h2>
         <div>
           <label>Naziv:</label>
           <input
@@ -160,7 +200,7 @@ const MuzejiAdmin = () => {
             required
           />
         </div>
-        <button type="submit">Dodaj muzej</button>
+        <button type="submit">{editingMuseumId ? 'Ažuriraj muzej' : 'Dodaj muzej'}</button>
       </form>
 
       {/* Tabela sa spiskom muzeja */}
@@ -186,7 +226,7 @@ const MuzejiAdmin = () => {
               <td>{museum.location}</td>
               <td>{museum.ticket_price}</td>
               <td>
-                <button>Izmeni</button>
+                <button onClick={() => handleEdit(museum)}>Izmeni</button>
                 <button onClick={() => deleteMuseum(museum.id)}>Obriši</button>
               </td>
             </tr>
