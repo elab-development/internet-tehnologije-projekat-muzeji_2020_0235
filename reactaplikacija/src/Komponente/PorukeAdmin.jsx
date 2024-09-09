@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './PorukeAdmin.css';
 
 const PorukeAdmin = () => {
   const [messages, setMessages] = useState([]);
@@ -34,7 +35,6 @@ const PorukeAdmin = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Nakon brisanja, ažuriramo listu poruka
       setMessages(messages.filter((message) => message.id !== id));
     } catch (error) {
       setError('Greška prilikom brisanja poruke.');
@@ -50,7 +50,7 @@ const PorukeAdmin = () => {
   }
 
   return (
-    <div>
+    <div className="poruke-admin">
       <h1>Spisak korisničkih poruka</h1>
 
       {/* Tabela sa spiskom poruka */}
@@ -58,9 +58,9 @@ const PorukeAdmin = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Museum ID</th>
+            <th>Korisnik</th>
+            <th>Muzej</th>
             <th>Sadržaj poruke</th>
-            <th>Korisnik ID</th>
             <th>Akcije</th>
           </tr>
         </thead>
@@ -68,9 +68,9 @@ const PorukeAdmin = () => {
           {messages.map((message) => (
             <tr key={message.id}>
               <td>{message.id}</td>
-              <td>{message.museum_id}</td>
+              <td>{message.user.name}</td>
+              <td>{message.museum.name}</td>
               <td>{message.content}</td>
-              <td>{message.user_id}</td>
               <td>
                 <button onClick={() => deleteMessage(message.id)}>Obriši</button>
               </td>

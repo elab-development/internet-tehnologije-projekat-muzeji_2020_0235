@@ -12,7 +12,10 @@ class MessageController extends Controller
     // Prikaz svih poruka (index)
     public function index()
     {
-        $messages = Message::all();
+        // Učitavamo sve poruke zajedno sa podacima o korisniku koji je kreirao poruku i muzeju na koji se poruka odnosi
+        $messages = Message::with(['user', 'museum'])->get();
+
+        // Vraćamo poruke sa pridruženim korisnikom i muzejem kao JSON odgovor
         return response()->json($messages, 200);
     }
 

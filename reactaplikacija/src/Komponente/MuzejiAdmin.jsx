@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './MuzejiAdmin.css'; // Uvoz CSS stilova
 
 const MuzejiAdmin = () => {
   const [museums, setMuseums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // Stanje za modal
   const [newMuseum, setNewMuseum] = useState({
     name: '',
     description: '',
@@ -13,7 +15,7 @@ const MuzejiAdmin = () => {
     ticket_price: '',
     image_url: '',
   });
-  const [editingMuseumId, setEditingMuseumId] = useState(null); // Dodajemo stanje za ID muzeja koji se uređuje
+  const [editingMuseumId, setEditingMuseumId] = useState(null);
 
   useEffect(() => {
     const fetchMuseums = async () => {
@@ -55,7 +57,6 @@ const MuzejiAdmin = () => {
 
     try {
       if (editingMuseumId) {
-        // Ažuriramo postojeći muzej
         await axios.put(
           `http://127.0.0.1:8000/api/museums/${editingMuseumId}`,
           {
@@ -71,10 +72,8 @@ const MuzejiAdmin = () => {
           }
         );
 
-        // Ažuriramo listu muzeja nakon izmena
         setMuseums(museums.map((museum) => (museum.id === editingMuseumId ? { ...museum, ...newMuseum } : museum)));
       } else {
-        // Kreiramo novi muzej
         const response = await axios.post(
           'http://127.0.0.1:8000/api/museums',
           {
@@ -90,11 +89,9 @@ const MuzejiAdmin = () => {
           }
         );
 
-        // Dodajemo novi muzej u listu
         setMuseums([...museums, response.data]);
       }
 
-      // Resetujemo formu i editovanje
       setNewMuseum({
         name: '',
         description: '',
@@ -104,6 +101,7 @@ const MuzejiAdmin = () => {
         image_url: '',
       });
       setEditingMuseumId(null);
+      setIsModalOpen(false); // Zatvaramo modal
     } catch (error) {
       setError('Greška prilikom kreiranja ili ažuriranja muzeja.');
     }
@@ -123,6 +121,24 @@ const MuzejiAdmin = () => {
       image_url: museum.image_url,
     });
     setEditingMuseumId(museum.id);
+    setIsModalOpen(true); // Otvaramo modal
+  };
+
+  const openModal = () => {
+    setNewMuseum({
+      name: '',
+      description: '',
+      type: '',
+      location: '',
+      ticket_price: '',
+      image_url: '',
+    });
+    setEditingMuseumId(null);
+    setIsModalOpen(true); // Otvaramo modal za kreiranje
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Zatvaramo modal
   };
 
   if (loading) {
@@ -134,77 +150,88 @@ const MuzejiAdmin = () => {
   }
 
   return (
-    <div>
+    <div className="muzeji-admin">
       <h1>Spisak muzeja</h1>
 
-      {/* Forma za kreiranje ili ažuriranje muzeja */}
-      <form onSubmit={createOrUpdateMuseum}>
-        <h2>{editingMuseumId ? 'Izmeni muzej' : 'Kreiraj novi muzej'}</h2>
-        <div>
-          <label>Naziv:</label>
-          <input
-            type="text"
-            name="name"
-            value={newMuseum.name}
-            onChange={handleInputChange}
-            required
-          />
+      <button onClick={openModal} className="add-museum-button">Dodaj novi muzej</button>
+
+      {/* Modal za kreiranje ili ažuriranje muzeja */}
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close-button" onClick={closeModal}>&times;</span>
+            <form className="muzeji-admin-form" onSubmit={createOrUpdateMuseum}>
+              <h2>{editingMuseumId ? 'Izmeni muzej' : 'Kreiraj novi muzej'}</h2>
+              <div>
+                <label>Naziv:</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newMuseum.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>Opis:</label>
+                <textarea
+                  name="description"
+                  value={newMuseum.description}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>Tip:</label>
+                <select name="type" value={newMuseum.type} onChange={handleInputChange} required>
+                  <option value="">Izaberi tip</option>
+                  <option value="umetnost">Umetnost</option>
+                  <option value="istorijski">Istorijski</option>
+                  <option value="naučni">Naučni</option>
+                  <option value="savremeni">Savremeni</option>
+                  <option value="vojni">Vojni</option>
+                </select>
+              </div>
+              <div>
+                <label>Lokacija:</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={newMuseum.location}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>Cena karte:</label>
+                <input
+                  type="number"
+                  name="ticket_price"
+                  value={newMuseum.ticket_price}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>URL slike:</label>
+                <input
+                  type="url"
+                  name="image_url"
+                  value={newMuseum.image_url}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <button type="submit" className="submit-button">
+                {editingMuseumId ? 'Ažuriraj muzej' : 'Dodaj muzej'}
+              </button>
+            </form>
+          </div>
         </div>
-        <div>
-          <label>Opis:</label>
-          <textarea
-            name="description"
-            value={newMuseum.description}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Tip:</label>
-          <select name="type" value={newMuseum.type} onChange={handleInputChange} required>
-            <option value="">Izaberi tip</option>
-            <option value="umetnost">Umetnost</option>
-            <option value="istorijski">Istorijski</option>
-            <option value="naučni">Naučni</option>
-            <option value="savremeni">Savremeni</option>
-            <option value="vojni">Vojni</option>
-          </select>
-        </div>
-        <div>
-          <label>Lokacija:</label>
-          <input
-            type="text"
-            name="location"
-            value={newMuseum.location}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Cena karte:</label>
-          <input
-            type="number"
-            name="ticket_price"
-            value={newMuseum.ticket_price}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>URL slike:</label>
-          <input
-            type="url"
-            name="image_url"
-            value={newMuseum.image_url}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit">{editingMuseumId ? 'Ažuriraj muzej' : 'Dodaj muzej'}</button>
-      </form>
+      )}
 
       {/* Tabela sa spiskom muzeja */}
-      <table>
+      <table className="muzeji-admin-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -226,8 +253,8 @@ const MuzejiAdmin = () => {
               <td>{museum.location}</td>
               <td>{museum.ticket_price}</td>
               <td>
-                <button onClick={() => handleEdit(museum)}>Izmeni</button>
-                <button onClick={() => deleteMuseum(museum.id)}>Obriši</button>
+                <button onClick={() => handleEdit(museum)} className="edit-button">Izmeni</button>
+                <button onClick={() => deleteMuseum(museum.id)} className="delete-button">Obriši</button>
               </td>
             </tr>
           ))}
